@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transaction Details — FraudGuard</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body onload="initTransactionDetailPage()">
+
+  <div class="dashboard-layout">
+    
+    <aside class="sidebar">
+      <div>
+        <div class="sidebar-brand">
+          <span>🛡️</span> FraudGuard
+        </div>
+        
+        <nav class="sidebar-nav">
+          <div class="nav-section-title">Core Engine</div>
+          <a href="dashboard.html" class="nav-item">📊 Overview</a>
+          <a href="transactions.html" class="nav-item active">💳 Transactions</a>
+          <a href="alerts.html" class="nav-item">🚨 Alerts</a>
+          <a href="investigations.html" class="nav-item">🔍 Investigations</a>
+
+          <div class="nav-section-title">Intelligence</div>
+          <a href="graph.html" class="nav-item">📈 Graph Analysis</a>
+          <a href="learning.html" class="nav-item">🧠 Adaptive Learning</a>
+          <a href="evidence.html" class="nav-item">📋 Evidence & Audit</a>
+
+          <div class="nav-section-title">Account</div>
+          <a href="profile.html" class="nav-item">👤 Profile</a>
+          <a href="report-fraud.html" class="nav-item">⚠️ Report Fraud</a>
+          <a href="settings.html" class="nav-item">⚙️ Settings</a>
+        </nav>
+      </div>
+
+      <div class="sidebar-user">
+        <div class="user-info">
+          <div class="user-avatar">DA</div>
+          <div class="user-details">
+            <div class="name">Demo Analyst</div>
+            <div class="role">FRAUD ANALYST</div>
+          </div>
+        </div>
+        <button class="btn btn-sm btn-secondary" onclick="auth.logout()" title="Logout" style="padding: 6px 10px;">🚪</button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      
+      <header class="topbar">
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <button class="mobile-toggle" onclick="toggleSidebar()">☰</button>
+          <div class="topbar-title">
+            <h1 id="txn-title-id">Transaction Details</h1>
+          </div>
+        </div>
+        <div class="topbar-actions">
+          <a href="transactions.html" class="btn btn-sm btn-secondary">← Back to List</a>
+        </div>
+      </header>
+
+      <div class="page-container">
+        
+        <div id="detail-loading" class="card" style="text-align: center; padding: 40px;">
+          <div style="font-size: 1.2rem; color: var(--text-muted);">Loading transaction intelligence breakdown...</div>
+        </div>
+
+        <div id="detail-content" style="display: none;">
+          
+          <!-- Top Info Card -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <span id="detail-decision-badge"></span>
+                <span id="detail-risk-badge" style="margin-left: 10px;"></span>
+              </div>
+              <div style="font-size: 0.85rem; color: var(--text-muted);" id="detail-timestamp"></div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 16px; padding: 20px; background: #f8fafc; border-radius: var(--radius-md);">
+              <div>
+                <div style="font-size: 0.8rem; color: var(--text-muted);">Amount</div>
+                <div style="font-size: 1.8rem; font-weight: 800; color: var(--text-main);" id="detail-amount"></div>
+              </div>
+
+              <div>
+                <div style="font-size: 0.8rem; color: var(--text-muted);">Sender → Beneficiary</div>
+                <div style="font-size: 1rem; font-weight: 600;" id="detail-accounts"></div>
+              </div>
+
+              <div>
+                <div style="font-size: 0.8rem; color: var(--text-muted);">Location</div>
+                <div style="font-size: 1rem; font-weight: 600;" id="detail-location"></div>
+              </div>
+
+              <div>
+                <div style="font-size: 0.8rem; color: var(--text-muted);">Device Fingerprint</div>
+                <div style="font-size: 1rem; font-weight: 600;" id="detail-device"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Risk Signal Breakdown Grid -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+            
+            <!-- Left: Explainable Risk Signal Breakdown -->
+            <div class="card">
+              <div class="card-title" style="margin-bottom: 16px;">
+                ⚡ Explainable Risk Signal Contributions
+              </div>
+
+              <div id="detail-reasons-list" style="display: flex; flex-direction: column; gap: 10px;">
+                <!-- Populated dynamically -->
+              </div>
+            </div>
+
+            <!-- Right: Behavioural & Graph Context -->
+            <div>
+              <div class="card">
+                <div class="card-title" style="margin-bottom: 16px;">
+                  👤 Behavioural Profile Analysis
+                </div>
+
+                <div id="detail-behaviour-box" style="padding: 16px; border-radius: var(--radius-sm); margin-bottom: 16px;">
+                  <!-- Dynamic Behaviour Box -->
+                </div>
+
+                <div style="font-size: 0.88rem; color: var(--text-muted);">
+                  <strong>User Baseline Profile:</strong><br>
+                  • Typical Amount: ₹1,500.00<br>
+                  • Trusted Device: Samsung S23<br>
+                  • Primary Location: Mumbai, India
+                </div>
+              </div>
+
+              <!-- SHA-256 Cryptographic Evidence Card -->
+              <div class="card" style="border-left: 4px solid var(--primary);">
+                <div class="card-title" style="margin-bottom: 12px;">
+                  🔐 SHA-256 Cryptographic Evidence
+                </div>
+                <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px;">
+                  High-risk decisions generate an immutable evidence fingerprint using browser Web Crypto SHA-256.
+                </div>
+                <div id="detail-hash-box" style="background: #0f172a; color: #38bdf8; font-family: monospace; font-size: 0.8rem; padding: 12px; border-radius: var(--radius-sm); word-break: break-all;">
+                  Computing hash...
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Bottom Action Toolbar -->
+          <div class="card" style="margin-top: 10px;">
+            <div class="card-title" style="margin-bottom: 16px;">Analyst Decision Toolbar</div>
+            <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+              <button class="btn btn-danger" onclick="actionConfirmFraud()">🚫 Confirm Fraud</button>
+              <button class="btn btn-success" onclick="actionMarkGenuine()">✅ Mark Genuine</button>
+              <a href="graph.html" class="btn btn-secondary">📈 Inspect Graph Connections</a>
+              <a href="evidence.html" class="btn btn-secondary">📋 Evidence Log</a>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/transactions.js"></script>
+  <script>
+    let currentTxn = null;
+
+    async function initTransactionDetailPage() {
+      if (!auth.requireAuth()) return;
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const txnId = urlParams.get('id');
+
+      if (!txnId) {
+        document.getElementById('detail-loading').innerHTML = `<div style="color:var(--danger);">No Transaction ID provided. <a href="transactions.html">Return to list</a></div>`;
+        return;
+      }
+
+      const res = await api.getTransactions(100);
+      if (res && res.success) {
+        currentTxn = res.data.find(t => t.transactionId === txnId);
+      }
+
+      if (!currentTxn) {
+        document.getElementById('detail-loading').innerHTML = `<div style="color:var(--danger);">Transaction ${txnId} not found. <a href="transactions.html">Return to list</a></div>`;
+        return;
+      }
+
+      renderDetails(currentTxn);
+    }
+
+    async function renderDetails(t) {
+      document.getElementById('detail-loading').style.display = 'none';
+      document.getElementById('detail-content').style.display = 'block';
+
+      document.getElementById('txn-title-id').textContent = `Transaction: ${t.transactionId}`;
+      document.getElementById('detail-amount').textContent = formatCurrency(t.amount);
+      document.getElementById('detail-accounts').textContent = `${t.accountFrom || 'N/A'} → ${t.accountTo || 'N/A'}`;
+      document.getElementById('detail-location').textContent = t.location || 'Unknown';
+      document.getElementById('detail-device').textContent = t.device || 'Unknown';
+      document.getElementById('detail-timestamp').textContent = `Logged: ${formatDate(t.timestamp)}`;
+
+      document.getElementById('detail-risk-badge').innerHTML = getRiskBadge(t.riskScore);
+      document.getElementById('detail-decision-badge').innerHTML = getDecisionBadge(t.decision);
+
+      // Reasons list
+      const reasonsList = document.getElementById('detail-reasons-list');
+      const reasons = t.reasons || ['Baseline evaluation'];
+      reasonsList.innerHTML = reasons.map(r => {
+        return `
+          <div style="background: #f8fafc; border-left: 4px solid var(--primary); padding: 12px 16px; border-radius: var(--radius-sm); font-size: 0.9rem; color: var(--text-main); font-weight: 500;">
+            • ${r}
+          </div>
+        `;
+      }).join('');
+
+      // Behaviour box
+      const bBox = document.getElementById('detail-behaviour-box');
+      if (t.behaviourMatch) {
+        bBox.style.background = 'var(--success-bg)';
+        bBox.style.border = '1px solid var(--success-border)';
+        bBox.innerHTML = `<strong style="color: var(--success);">✓ BEHAVIOUR MATCH</strong><p style="font-size:0.85rem; color:#065f46; margin-top:4px;">Transaction parameters align with the user's historical behavioural baseline.</p>`;
+      } else {
+        bBox.style.background = 'var(--danger-bg)';
+        bBox.style.border = '1px solid var(--danger-border)';
+        bBox.innerHTML = `<strong style="color: var(--danger);">⚠️ BEHAVIOURAL ANOMALY DETECTED</strong><p style="font-size:0.85rem; color:#991b1b; margin-top:4px;">Significant deviation from baseline parameters (amount size, unrecognized device, location mismatch).</p>`;
+      }
+
+      // Generate live SHA-256 hash
+      const canonicalData = JSON.stringify({
+        txnId: t.transactionId,
+        amount: t.amount,
+        riskScore: t.riskScore,
+        decision: t.decision,
+        timestamp: t.timestamp
+      });
+      const hash = await generateSHA256(canonicalData);
+      document.getElementById('detail-hash-box').textContent = hash;
+    }
+
+    async function actionConfirmFraud() {
+      if (!currentTxn) return;
+      const user = auth.getUser();
+      await api.saveFeedback({
+        feedbackId: 'FBK-' + Date.now(),
+        transactionId: currentTxn.transactionId,
+        prediction: 'HIGH RISK',
+        confirmedOutcome: 'FRAUD',
+        analyst: user ? user.email : 'demo@fraudguard.ai',
+        timestamp: new Date().toISOString()
+      });
+      showToast(`Confirmed outcome logged as FRAUD for ${currentTxn.transactionId}`, 'danger');
+    }
+
+    async function actionMarkGenuine() {
+      if (!currentTxn) return;
+      const user = auth.getUser();
+      await api.saveFeedback({
+        feedbackId: 'FBK-' + Date.now(),
+        transactionId: currentTxn.transactionId,
+        prediction: 'HIGH RISK',
+        confirmedOutcome: 'GENUINE',
+        analyst: user ? user.email : 'demo@fraudguard.ai',
+        timestamp: new Date().toISOString()
+      });
+      showToast(`Confirmed outcome logged as GENUINE for ${currentTxn.transactionId}`, 'success');
+    }
+  </script>
+</body>
+</html>

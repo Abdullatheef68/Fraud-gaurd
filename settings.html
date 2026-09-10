@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings — FraudGuard</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body onload="initSettingsPage()">
+
+  <div class="dashboard-layout">
+    
+    <aside class="sidebar">
+      <div>
+        <div class="sidebar-brand">
+          <span>🛡️</span> FraudGuard
+        </div>
+        
+        <nav class="sidebar-nav">
+          <div class="nav-section-title">Core Engine</div>
+          <a href="dashboard.html" class="nav-item">📊 Overview</a>
+          <a href="transactions.html" class="nav-item">💳 Transactions</a>
+          <a href="alerts.html" class="nav-item">🚨 Alerts</a>
+          <a href="investigations.html" class="nav-item">🔍 Investigations</a>
+
+          <div class="nav-section-title">Intelligence</div>
+          <a href="graph.html" class="nav-item">📈 Graph Analysis</a>
+          <a href="learning.html" class="nav-item">🧠 Adaptive Learning</a>
+          <a href="evidence.html" class="nav-item">📋 Evidence & Audit</a>
+
+          <div class="nav-section-title">Account</div>
+          <a href="profile.html" class="nav-item">👤 Profile</a>
+          <a href="report-fraud.html" class="nav-item">⚠️ Report Fraud</a>
+          <a href="settings.html" class="nav-item active">⚙️ Settings</a>
+        </nav>
+      </div>
+
+      <div class="sidebar-user">
+        <div class="user-info">
+          <div class="user-avatar">DA</div>
+          <div class="user-details">
+            <div class="name">Demo Analyst</div>
+            <div class="role">FRAUD ANALYST</div>
+          </div>
+        </div>
+        <button class="btn btn-sm btn-secondary" onclick="auth.logout()" title="Logout" style="padding: 6px 10px;">🚪</button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      
+      <header class="topbar">
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <button class="mobile-toggle" onclick="toggleSidebar()">☰</button>
+          <div class="topbar-title">
+            <h1>Platform Settings & API Configuration</h1>
+          </div>
+        </div>
+        <div class="topbar-actions">
+          <a href="dashboard.html" class="btn btn-sm btn-secondary">📊 Dashboard</a>
+        </div>
+      </header>
+
+      <div class="page-container">
+        
+        <!-- Status Card -->
+        <div class="card">
+          <div class="card-title" style="margin-bottom: 16px;">
+            🔌 Backend Connection Mode
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 20px;">
+            <div id="cfg-mode-badge"></div>
+            <div style="font-size: 0.9rem; color: var(--text-muted);" id="cfg-mode-desc">Checking status...</div>
+          </div>
+        </div>
+
+        <!-- Google Apps Script API Config Form -->
+        <div class="card">
+          <div class="card-title" style="margin-bottom: 12px;">
+            🌐 Google Apps Script Web App Deployment URL
+          </div>
+          <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 20px;">
+            To connect FraudGuard to Google Sheets cloud storage, paste your deployed Web App URL below:
+          </p>
+
+          <form onsubmit="saveApiConfig(event)">
+            <div class="form-group">
+              <label for="cfg-api-url">Google Apps Script Web App URL</label>
+              <input type="url" id="cfg-api-url" class="form-control" placeholder="https://script.google.com/macros/s/AKfycbx.../exec">
+            </div>
+
+            <div style="display: flex; gap: 12px;">
+              <button type="submit" class="btn btn-primary">Save Configuration</button>
+              <button type="button" class="btn btn-secondary" onclick="testConnection()">Test Connection</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Local Demo Reset Card -->
+        <div class="card">
+          <div class="card-title" style="margin-bottom: 12px;">
+            🧹 Local Demo Data Reset
+          </div>
+          <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 20px;">
+            Reset browser localStorage to clean default hackathon demo state (resets transactions, alerts, cases, evidence, and feedback).
+          </p>
+          <button class="btn btn-danger" onclick="resetDemoData()">Reset All Demo Data</button>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/utils.js"></script>
+  <script>
+    function initSettingsPage() {
+      if (!auth.requireAuth()) return;
+      
+      const input = document.getElementById('cfg-api-url');
+      const badge = document.getElementById('cfg-mode-badge');
+      const desc = document.getElementById('cfg-mode-desc');
+
+      const storedUrl = localStorage.getItem('fg_custom_api_url') || CONFIG.API_URL || '';
+      input.value = storedUrl;
+
+      if (!storedUrl) {
+        badge.className = 'demo-mode-badge';
+        badge.textContent = 'DEMO MODE';
+        desc.textContent = 'Running locally with Browser Storage. No external server needed.';
+      } else {
+        badge.className = 'api-mode-badge';
+        badge.textContent = 'REAL API MODE';
+        desc.textContent = 'Configured to send live data to Google Apps Script.';
+      }
+    }
+
+    function saveApiConfig(e) {
+      e.preventDefault();
+      const url = document.getElementById('cfg-api-url').value.trim();
+      localStorage.setItem('fg_custom_api_url', url);
+      CONFIG.API_URL = url;
+      CONFIG.DEMO_MODE = url === '';
+      showToast(url ? 'Google Apps Script URL saved!' : 'Switched to local Demo Mode.', 'success');
+      setTimeout(() => location.reload(), 1000);
+    }
+
+    async function testConnection() {
+      const url = document.getElementById('cfg-api-url').value.trim();
+      if (!url) {
+        showToast('Please enter a Web App URL to test.', 'warning');
+        return;
+      }
+
+      showToast('Testing connection to Google Apps Script...', 'info');
+      try {
+        const res = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ action: 'ping' })
+        });
+        const data = await res.json();
+        if (data && data.success) {
+          showToast('✓ Connection successful! Apps Script is responding.', 'success');
+        } else {
+          showToast('Connection failed: ' + (data.error || 'Invalid response'), 'danger');
+        }
+      } catch (err) {
+        showToast('Connection error: Unable to reach URL. Ensure deployment is set to "Anyone".', 'danger');
+      }
+    }
+
+    function resetDemoData() {
+      if (confirm('Are you sure you want to reset all demo data?')) {
+        localStorage.removeItem(STORAGE_KEYS.TRANSACTIONS);
+        localStorage.removeItem(STORAGE_KEYS.ALERTS);
+        localStorage.removeItem(STORAGE_KEYS.INVESTIGATIONS);
+        localStorage.removeItem(STORAGE_KEYS.FEEDBACK);
+        localStorage.removeItem(STORAGE_KEYS.EVIDENCE);
+        localStorage.removeItem(STORAGE_KEYS.FRAUD_REPORTS);
+        api.initDemoData();
+        showToast('Demo data reset to initial state.', 'success');
+        setTimeout(() => location.reload(), 800);
+      }
+    }
+  </script>
+</body>
+</html>

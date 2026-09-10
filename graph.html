@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Graph Analysis — FraudGuard</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body onload="initGraph()">
+
+  <div class="dashboard-layout">
+    
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div>
+        <div class="sidebar-brand">
+          <span>🛡️</span> FraudGuard
+        </div>
+        
+        <nav class="sidebar-nav">
+          <div class="nav-section-title">Core Engine</div>
+          <a href="dashboard.html" class="nav-item">📊 Overview</a>
+          <a href="transactions.html" class="nav-item">💳 Transactions</a>
+          <a href="alerts.html" class="nav-item">🚨 Alerts</a>
+          <a href="investigations.html" class="nav-item">🔍 Investigations</a>
+
+          <div class="nav-section-title">Intelligence</div>
+          <a href="graph.html" class="nav-item active">📈 Graph Analysis</a>
+          <a href="learning.html" class="nav-item">🧠 Adaptive Learning</a>
+          <a href="evidence.html" class="nav-item">📋 Evidence & Audit</a>
+
+          <div class="nav-section-title">Account</div>
+          <a href="profile.html" class="nav-item">👤 Profile</a>
+          <a href="report-fraud.html" class="nav-item">⚠️ Report Fraud</a>
+          <a href="settings.html" class="nav-item">⚙️ Settings</a>
+        </nav>
+      </div>
+
+      <div class="sidebar-user">
+        <div class="user-info">
+          <div class="user-avatar">DA</div>
+          <div class="user-details">
+            <div class="name">Demo Analyst</div>
+            <div class="role">FRAUD ANALYST</div>
+          </div>
+        </div>
+        <button class="btn btn-sm btn-secondary" onclick="auth.logout()" title="Logout" style="padding: 6px 10px;">🚪</button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      
+      <header class="topbar">
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <button class="mobile-toggle" onclick="toggleSidebar()">☰</button>
+          <div class="topbar-title">
+            <h1>Fraud Network & Graph Intelligence</h1>
+          </div>
+        </div>
+        <div class="topbar-actions">
+          <a href="dashboard.html" class="btn btn-sm btn-secondary">📊 Dashboard</a>
+        </div>
+      </header>
+
+      <div class="page-container">
+        
+        <!-- Interactive Graph Canvas Card -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">🕸️ Relational Fraud Topology Graph</div>
+            <div style="font-size: 0.85rem; color: var(--text-muted);">Click any node to inspect entity intelligence</div>
+          </div>
+
+          <div id="graph-canvas-container" style="margin-bottom: 20px;">
+            <!-- Rendered by graph.js -->
+          </div>
+
+          <!-- Dynamic Node Selection Box -->
+          <div id="node-info-box">
+            <div style="background: #f8fafc; padding: 16px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); color: var(--text-muted); font-size: 0.9rem;">
+              👈 Click on any node above to inspect connected accounts, shared device fingerprints, and money transfer flows.
+            </div>
+          </div>
+        </div>
+
+        <!-- Detected Mule Ring Detail Card -->
+        <div class="card" style="border-left: 5px solid var(--danger);">
+          <div class="card-title" style="color: var(--danger); margin-bottom: 16px;">
+            ⚠️ Flagged Cluster #1: Money Mule Transfer Ring
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-bottom: 20px;">
+            <div style="background: #f8fafc; padding: 16px; border-radius: var(--radius-sm);">
+              <div style="font-size: 0.8rem; color: var(--text-muted);">Connected Accounts</div>
+              <div style="font-size: 1.5rem; font-weight: 800; color: var(--text-main);">4 Accounts</div>
+            </div>
+
+            <div style="background: #f8fafc; padding: 16px; border-radius: var(--radius-sm);">
+              <div style="font-size: 0.8rem; color: var(--text-muted);">Transactions Analyzed</div>
+              <div style="font-size: 1.5rem; font-weight: 800; color: var(--text-main);">23 Hops</div>
+            </div>
+
+            <div style="background: #f8fafc; padding: 16px; border-radius: var(--radius-sm);">
+              <div style="font-size: 0.8rem; color: var(--text-muted);">Total Volume</div>
+              <div style="font-size: 1.5rem; font-weight: 800; color: var(--text-main);">₹8.4 Lakhs</div>
+            </div>
+
+            <div style="background: #f8fafc; padding: 16px; border-radius: var(--radius-sm);">
+              <div style="font-size: 0.8rem; color: var(--text-muted);">Composite Risk</div>
+              <div style="font-size: 1.5rem; font-weight: 800; color: var(--danger);">97 / 100</div>
+            </div>
+          </div>
+
+          <div style="background: var(--danger-bg); border: 1px solid var(--danger-border); padding: 16px; border-radius: var(--radius-sm);">
+            <strong style="color: var(--danger);">Topological Anomaly Indicators:</strong>
+            <ul style="margin-left: 20px; margin-top: 8px; color: #991b1b; font-size: 0.9rem;">
+              <li>Rapid sequential transfer chain (ACC-RING-A → ACC-RING-B → ACC-RING-C → ACC-RING-D)</li>
+              <li>Shared hardware device fingerprint (DEV-9912) across 3 accounts simultaneously</li>
+              <li>Circular layering cashout behavior designed to obscure money trail</li>
+              <li>High-velocity burst execution (under 60 seconds elapsed time)</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/graph.js"></script>
+</body>
+</html>

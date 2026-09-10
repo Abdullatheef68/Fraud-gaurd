@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transactions — FraudGuard</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body onload="initTransactionsPage()">
+
+  <div class="dashboard-layout">
+    
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div>
+        <div class="sidebar-brand">
+          <span>🛡️</span> FraudGuard
+        </div>
+        
+        <nav class="sidebar-nav">
+          <div class="nav-section-title">Core Engine</div>
+          <a href="dashboard.html" class="nav-item">📊 Overview</a>
+          <a href="transactions.html" class="nav-item active">💳 Transactions</a>
+          <a href="alerts.html" class="nav-item">🚨 Alerts</a>
+          <a href="investigations.html" class="nav-item">🔍 Investigations</a>
+
+          <div class="nav-section-title">Intelligence</div>
+          <a href="graph.html" class="nav-item">📈 Graph Analysis</a>
+          <a href="learning.html" class="nav-item">🧠 Adaptive Learning</a>
+          <a href="evidence.html" class="nav-item">📋 Evidence & Audit</a>
+
+          <div class="nav-section-title">Account</div>
+          <a href="profile.html" class="nav-item">👤 Profile</a>
+          <a href="report-fraud.html" class="nav-item">⚠️ Report Fraud</a>
+          <a href="settings.html" class="nav-item">⚙️ Settings</a>
+        </nav>
+      </div>
+
+      <div class="sidebar-user">
+        <div class="user-info">
+          <div class="user-avatar">DA</div>
+          <div class="user-details">
+            <div class="name">Demo Analyst</div>
+            <div class="role">FRAUD ANALYST</div>
+          </div>
+        </div>
+        <button class="btn btn-sm btn-secondary" onclick="auth.logout()" title="Logout" style="padding: 6px 10px;">🚪</button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      
+      <header class="topbar">
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <button class="mobile-toggle" onclick="toggleSidebar()">☰</button>
+          <div class="topbar-title">
+            <h1>Transaction Management & Evaluation</h1>
+          </div>
+        </div>
+        <div class="topbar-actions">
+          <a href="dashboard.html" class="btn btn-sm btn-primary">📊 Dashboard</a>
+        </div>
+      </header>
+
+      <div class="page-container">
+        
+        <!-- Quick Simulator Header Bar -->
+        <div class="sim-bar" style="margin-bottom: 24px;">
+          <div class="sim-bar-title">⚡ Simulate Transaction Event</div>
+          <div class="sim-buttons">
+            <button class="btn-sim" onclick="triggerSimulation('NORMAL')">
+              <div class="title">✅ Normal (₹850)</div>
+            </button>
+            <button class="btn-sim" onclick="triggerSimulation('SUSPICIOUS')">
+              <div class="title">⚠️ Suspicious (₹18,200)</div>
+            </button>
+            <button class="btn-sim" onclick="triggerSimulation('HIGH_RISK_FRAUD')">
+              <div class="title">🚨 High Risk (₹48,500)</div>
+            </button>
+            <button class="btn-sim" onclick="triggerSimulation('MONEY_MULE')">
+              <div class="title">🕸️ Money Mule Ring</div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Filter Controls Card -->
+        <div class="card">
+          <div style="display: grid; grid-template-columns: 2fr 1fr auto; gap: 16px; align-items: center;">
+            <div>
+              <input type="text" id="tx-search" class="form-control" placeholder="Search by Txn ID, Account, or Location..." oninput="filterTransactions()">
+            </div>
+
+            <div>
+              <select id="tx-filter-risk" class="form-control" onchange="filterTransactions()">
+                <option value="ALL">All Risk Levels</option>
+                <option value="HIGH">High Risk (71–100)</option>
+                <option value="MEDIUM">Medium Risk (31–70)</option>
+                <option value="LOW">Low Risk (0–30)</option>
+              </select>
+            </div>
+
+            <div>
+              <button class="btn btn-secondary" onclick="resetFilters()">Reset</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Transactions Table -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Transaction Audit Records</div>
+            <div style="font-size: 0.85rem; color: var(--text-muted);" id="txn-count-label">Showing transactions</div>
+          </div>
+
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Transaction ID</th>
+                  <th>Amount</th>
+                  <th>Source → Destination</th>
+                  <th>Location</th>
+                  <th>Device</th>
+                  <th>Risk Score</th>
+                  <th>Decision</th>
+                  <th>Timestamp</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="transactions-table-body">
+                <!-- Dynamic Content -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/transactions.js"></script>
+  <script>
+    let rawTransactions = [];
+
+    async function initTransactionsPage() {
+      if (!auth.requireAuth()) return;
+      await loadTransactions();
+    }
+
+    async function loadTransactions() {
+      const res = await api.getTransactions(100);
+      if (res && res.success) {
+        rawTransactions = res.data;
+        renderTable(rawTransactions);
+      }
+    }
+
+    function renderTable(list) {
+      const tbody = document.getElementById('transactions-table-body');
+      const countLabel = document.getElementById('txn-count-label');
+      if (countLabel) countLabel.textContent = `Total: ${list.length} records`;
+
+      if (!list || list.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="9" style="text-align:center; padding:30px; color:var(--text-muted);">No transactions match criteria.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = list.map(t => {
+        return `
+          <tr>
+            <td style="font-weight:700;"><a href="transaction-detail.html?id=${t.transactionId}">${t.transactionId}</a></td>
+            <td style="font-weight:600;">${formatCurrency(t.amount)}</td>
+            <td style="font-size:0.85rem; color:var(--text-muted);">${t.accountFrom || 'N/A'} → ${t.accountTo || 'N/A'}</td>
+            <td style="font-size:0.85rem;">${t.location || 'Unknown'}</td>
+            <td style="font-size:0.85rem;">${t.device || 'Unknown'}</td>
+            <td>${getRiskBadge(t.riskScore)}</td>
+            <td>${getDecisionBadge(t.decision)}</td>
+            <td style="font-size:0.8rem; color:var(--text-muted);">${formatDate(t.timestamp)}</td>
+            <td>
+              <a href="transaction-detail.html?id=${t.transactionId}" class="btn btn-sm btn-primary">Details</a>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function filterTransactions() {
+      const query = (document.getElementById('tx-search').value || '').toLowerCase();
+      const riskFilter = document.getElementById('tx-filter-risk').value;
+
+      const filtered = rawTransactions.filter(t => {
+        const matchesQuery = !query || 
+          (t.transactionId || '').toLowerCase().includes(query) ||
+          (t.accountFrom || '').toLowerCase().includes(query) ||
+          (t.accountTo || '').toLowerCase().includes(query) ||
+          (t.location || '').toLowerCase().includes(query);
+
+        let matchesRisk = true;
+        const score = Number(t.riskScore) || 0;
+        if (riskFilter === 'HIGH') matchesRisk = score >= 71;
+        else if (riskFilter === 'MEDIUM') matchesRisk = score >= 31 && score < 71;
+        else if (riskFilter === 'LOW') matchesRisk = score < 31;
+
+        return matchesQuery && matchesRisk;
+      });
+
+      renderTable(filtered);
+    }
+
+    function resetFilters() {
+      document.getElementById('tx-search').value = '';
+      document.getElementById('tx-filter-risk').value = 'ALL';
+      renderTable(rawTransactions);
+    }
+
+    function refreshCurrentPage() {
+      loadTransactions();
+    }
+  </script>
+</body>
+</html>

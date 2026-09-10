@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Adaptive Learning — FraudGuard</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    .flow-pipeline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      background: #f8fafc;
+      padding: 24px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+    }
+    .flow-step {
+      background: var(--primary);
+      color: white;
+      padding: 14px 20px;
+      border-radius: var(--radius-sm);
+      font-weight: 700;
+      font-size: 0.9rem;
+      text-align: center;
+      flex: 1;
+      min-width: 140px;
+      box-shadow: var(--shadow-sm);
+    }
+    .flow-arrow {
+      font-size: 1.5rem;
+      color: var(--primary);
+      font-weight: 800;
+    }
+  </style>
+</head>
+<body onload="initLearning()">
+
+  <div class="dashboard-layout">
+    
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div>
+        <div class="sidebar-brand">
+          <span>🛡️</span> FraudGuard
+        </div>
+        
+        <nav class="sidebar-nav">
+          <div class="nav-section-title">Core Engine</div>
+          <a href="dashboard.html" class="nav-item">📊 Overview</a>
+          <a href="transactions.html" class="nav-item">💳 Transactions</a>
+          <a href="alerts.html" class="nav-item">🚨 Alerts</a>
+          <a href="investigations.html" class="nav-item">🔍 Investigations</a>
+
+          <div class="nav-section-title">Intelligence</div>
+          <a href="graph.html" class="nav-item">📈 Graph Analysis</a>
+          <a href="learning.html" class="nav-item active">🧠 Adaptive Learning</a>
+          <a href="evidence.html" class="nav-item">📋 Evidence & Audit</a>
+
+          <div class="nav-section-title">Account</div>
+          <a href="profile.html" class="nav-item">👤 Profile</a>
+          <a href="report-fraud.html" class="nav-item">⚠️ Report Fraud</a>
+          <a href="settings.html" class="nav-item">⚙️ Settings</a>
+        </nav>
+      </div>
+
+      <div class="sidebar-user">
+        <div class="user-info">
+          <div class="user-avatar">DA</div>
+          <div class="user-details">
+            <div class="name">Demo Analyst</div>
+            <div class="role">FRAUD ANALYST</div>
+          </div>
+        </div>
+        <button class="btn btn-sm btn-secondary" onclick="auth.logout()" title="Logout" style="padding: 6px 10px;">🚪</button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      
+      <header class="topbar">
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <button class="mobile-toggle" onclick="toggleSidebar()">☰</button>
+          <div class="topbar-title">
+            <h1>Adaptive Learning & Feedback Pipeline</h1>
+          </div>
+        </div>
+        <div class="topbar-actions">
+          <a href="dashboard.html" class="btn btn-sm btn-secondary">📊 Dashboard</a>
+        </div>
+      </header>
+
+      <div class="page-container">
+        
+        <!-- Pipeline Diagram Card -->
+        <div class="card">
+          <div class="card-title" style="margin-bottom: 20px;">
+            🔄 Human-In-The-Loop Feedback Pipeline Architecture
+          </div>
+
+          <div class="flow-pipeline">
+            <div class="flow-step">📥 Transaction</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">🎯 Risk Prediction</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">👨‍💼 Analyst Feedback</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">✓ Confirmed Outcome</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">🧠 Future Model Training</div>
+          </div>
+        </div>
+
+        <!-- Learning Stats Grid -->
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div class="stat-icon blue">📊</div>
+            <div class="stat-content">
+              <div class="label">Total Feedback Samples</div>
+              <div class="value" id="feedback-samples">0</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon red">🚫</div>
+            <div class="stat-content">
+              <div class="label">Confirmed Fraud</div>
+              <div class="value" id="confirmed-fraud-count" style="color: var(--danger);">0</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon amber">⚠️</div>
+            <div class="stat-content">
+              <div class="label">False Positives</div>
+              <div class="value" id="false-positives-count" style="color: var(--warning);">0</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon green">🤖</div>
+            <div class="stat-content">
+              <div class="label">Model Version</div>
+              <div class="value" style="font-size: 1.3rem;">v1.0 (Active)</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Feedback Dataset Log Card -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Recent Analyst Feedback Samples</div>
+            <button class="btn btn-sm btn-secondary" onclick="initLearning()">🔄 Refresh</button>
+          </div>
+
+          <div id="feedback-list-container">
+            <!-- Dynamic feedback items -->
+          </div>
+        </div>
+
+        <!-- Architecture Note Card -->
+        <div class="card" style="border-left: 4px solid var(--success); background: var(--success-bg);">
+          <strong style="color: var(--success);">✓ Model Status: ACTIVE & LEARNING</strong>
+          <p style="margin-top: 8px; color: #065f46; font-size: 0.9rem;">
+            FraudGuard Risk Engine v1.0 collects analyst confirmation signals to build balanced ground-truth datasets.
+            <br><em>Note: Confirmed outcomes enrich future model training datasets (e.g. XGBoost, Random Forest). Instant retraining is omitted to prevent adversarial poisoning.</em>
+          </p>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/learning.js"></script>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login — FraudGuard</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    body {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .auth-container {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 40px;
+      max-width: 440px;
+      width: 100%;
+      box-shadow: var(--shadow-lg);
+    }
+    .auth-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .auth-brand {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="auth-container">
+    <div class="auth-header">
+      <div class="auth-brand">🛡️ FraudGuard</div>
+      <p style="color: var(--text-muted); font-size: 0.95rem;">Sign in to access analyst console</p>
+    </div>
+
+    <!-- Quick Demo Mode Box -->
+    <div style="background: var(--warning-bg); border: 1px solid var(--warning-border); padding: 16px; border-radius: var(--radius-sm); margin-bottom: 24px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+        <span class="demo-mode-badge">DEMO MODE ACTIVE</span>
+        <button class="btn btn-sm btn-secondary" onclick="fillDemoCredentials()" style="padding: 4px 8px; font-size: 0.78rem;">Auto-fill Demo</button>
+      </div>
+      <div style="font-size: 0.85rem; color: #92400e;">
+        <strong>Demo Email:</strong> demo@fraudguard.ai<br>
+        <strong>Demo Password:</strong> Demo@123
+      </div>
+    </div>
+
+    <form onsubmit="handleLoginSubmit(event)">
+      <div class="form-group">
+        <label for="login-email">Email Address</label>
+        <input type="email" id="login-email" class="form-control" placeholder="name@company.com" required>
+      </div>
+
+      <div class="form-group">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+          <label for="login-password" style="margin-bottom: 0;">Password</label>
+          <a href="forgot-password.html" style="font-size: 0.82rem;">Forgot password?</a>
+        </div>
+        <input type="password" id="login-password" class="form-control" placeholder="••••••••" required>
+      </div>
+
+      <div class="form-group" style="display: flex; align-items: center; gap: 8px;">
+        <input type="checkbox" id="remember-me" style="width: auto;">
+        <label for="remember-me" style="margin-bottom: 0; font-weight: 500; font-size: 0.88rem; cursor: pointer;">Remember me</label>
+      </div>
+
+      <button type="submit" id="btn-login" class="btn btn-primary btn-block" style="padding: 12px; margin-top: 10px; font-size: 1rem;">
+        SIGN IN
+      </button>
+    </form>
+
+    <div style="text-align: center; margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border-color); color: var(--text-muted); font-size: 0.9rem;">
+      Don't have an account? <a href="register.html" style="font-weight: 600;">Register here</a>
+    </div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/utils.js"></script>
+  <script>
+    function fillDemoCredentials() {
+      document.getElementById('login-email').value = 'demo@fraudguard.ai';
+      document.getElementById('login-password').value = 'Demo@123';
+      showToast('Demo credentials filled!', 'info');
+    }
+
+    async function handleLoginSubmit(e) {
+      e.preventDefault();
+      const email = document.getElementById('login-email').value;
+      const password = document.getElementById('login-password').value;
+      const remember = document.getElementById('remember-me').checked;
+      const btn = document.getElementById('btn-login');
+
+      btn.disabled = true;
+      btn.textContent = 'Signing in...';
+
+      const res = await auth.login(email, password, remember);
+
+      if (res.success) {
+        showToast('Login successful! Redirecting to dashboard...', 'success');
+        setTimeout(() => {
+          window.location.href = 'dashboard.html';
+        }, 800);
+      } else {
+        btn.disabled = false;
+        btn.textContent = 'SIGN IN';
+        showToast(res.error || 'Login failed', 'danger');
+      }
+    }
+  </script>
+</body>
+</html>

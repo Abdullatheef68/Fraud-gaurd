@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FraudGuard — Detect fraud before it becomes a loss</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    .hero {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: white;
+      padding: 100px 32px 120px 32px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 40px;
+      background: var(--bg-main);
+      clip-path: polygon(0 100%, 100% 100%, 100% 0);
+    }
+    .hero-title {
+      font-size: 3.5rem;
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 24px;
+      background: linear-gradient(135deg, #ffffff 0%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      line-height: 1.15;
+    }
+    .hero-desc {
+      font-size: 1.25rem;
+      color: #cbd5e1;
+      max-width: 800px;
+      margin: 0 auto 40px auto;
+      line-height: 1.6;
+    }
+    .hero-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+      margin-top: 40px;
+    }
+    .feature-card {
+      background: white;
+      border: 1px solid var(--border-color);
+      padding: 32px;
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .feature-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+    }
+    .feature-icon {
+      font-size: 2.5rem;
+      margin-bottom: 16px;
+    }
+    .feature-card h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: var(--text-main);
+    }
+    .feature-card p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+    .landing-nav {
+      background: #0f172a;
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .landing-brand {
+      color: white;
+      font-size: 1.5rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Landing Navigation -->
+  <header class="landing-nav">
+    <div class="landing-brand">
+      🛡️ FraudGuard
+    </div>
+    <div style="display: flex; gap: 16px; align-items: center;">
+      <a href="login.html" class="btn btn-secondary" style="background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2);">Sign In</a>
+      <a href="register.html" class="btn btn-primary">Get Started</a>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div style="display: inline-block; background: rgba(102, 126, 234, 0.2); border: 1px solid rgba(102, 126, 234, 0.4); color: #a5b4fc; padding: 6px 18px; border-radius: 50px; font-size: 0.85rem; font-weight: 700; margin-bottom: 20px; letter-spacing: 0.5px;">
+      🛡️ AI-ASSISTED FRAUD DETECTION PLATFORM
+    </div>
+    <h1 class="hero-title">Detect fraud before it<br>becomes a loss.</h1>
+    <p class="hero-desc">
+      FraudGuard combines behavioural intelligence, transaction analysis, network signals, and adaptive risk scoring to detect suspicious activity and support faster fraud prevention.
+    </p>
+    <div class="hero-buttons">
+      <a href="register.html" class="btn btn-primary" style="padding: 14px 32px; font-size: 1.05rem;">GET STARTED</a>
+      <a href="dashboard.html" class="btn btn-secondary" style="padding: 14px 32px; font-size: 1.05rem; background: rgba(255,255,255,0.15); color: white;">EXPLORE PLATFORM</a>
+    </div>
+  </section>
+
+  <!-- Value Proposition / Pillars -->
+  <div style="max-width: 1200px; margin: 0 auto; padding: 60px 32px;">
+
+    <div style="text-align: center; max-width: 700px; margin: 0 auto 50px auto;">
+      <h2 style="font-size: 2.2rem; font-weight: 800; margin-bottom: 16px;">Core Security Architecture</h2>
+      <p style="color: var(--text-muted); font-size: 1.05rem;">
+        End-to-end continuous intelligence engine operating on five fundamental principles:
+        <br><strong>DETECT → ANALYZE → SCORE → PREVENT → LEARN</strong>
+      </p>
+    </div>
+
+    <div class="feature-grid">
+      <!-- 1. Behavioural Intelligence -->
+      <div class="feature-card">
+        <div class="feature-icon">👤</div>
+        <h3>Behavioural Intelligence</h3>
+        <p>Establishes baseline user profiles tracking transaction amounts, frequency, device fingerprints, and geolocation to detect subtle anomalies.</p>
+      </div>
+
+      <!-- 2. Risk Engine -->
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <h3>Explainable Risk Scoring</h3>
+        <p>Evaluates deterministic signals with complete transparency. Every score of 0–100 provides detailed factor contributions for full auditability.</p>
+      </div>
+
+      <!-- 3. Network Graph Analysis -->
+      <div class="feature-card">
+        <div class="feature-icon">🕸️</div>
+        <h3>Graph Intelligence</h3>
+        <p>Maps relational ties across accounts, devices, and IP addresses to uncover complex Money Mule networks and rapid circular transfer rings.</p>
+      </div>
+
+      <!-- 4. Evidence Integrity -->
+      <div class="feature-card">
+        <div class="feature-icon">🔐</div>
+        <h3>Evidence Cryptography</h3>
+        <p>Protects high-risk transaction records with browser SHA-256 cryptographic hashing to maintain tamper-proof forensic audit trails.</p>
+      </div>
+
+      <!-- 5. Adaptive Learning -->
+      <div class="feature-card">
+        <div class="feature-icon">🧠</div>
+        <h3>Adaptive Learning</h3>
+        <p>Incorporates human-in-the-loop analyst feedback to continually enrich ML feature baseline training data and reduce false positives.</p>
+      </div>
+
+      <!-- 6. Real-Time Alerting -->
+      <div class="feature-card">
+        <div class="feature-icon">🚨</div>
+        <h3>Automated Prevention</h3>
+        <p>Instantly holds high-risk transactions, triggers critical alerts, and auto-generates investigation cases for fraud response teams.</p>
+      </div>
+    </div>
+
+    <!-- CTA Section -->
+    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: var(--radius-lg); padding: 60px 40px; margin-top: 80px; text-align: center; box-shadow: var(--shadow-lg);">
+      <h2 style="font-size: 2.2rem; font-weight: 800; margin-bottom: 16px;">Ready to explore FraudGuard?</h2>
+      <p style="font-size: 1.1rem; opacity: 0.9; max-width: 600px; margin: 0 auto 32px auto;">
+        Test instant offline demo mode or connect your Google Apps Script cloud database.
+      </p>
+      <a href="login.html" class="btn" style="background: white; color: var(--primary); padding: 14px 36px; font-size: 1.05rem; font-weight: 700;">LAUNCH DEMO CONSOLE</a>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <footer style="background: #0f172a; color: #94a3b8; padding: 40px 32px; text-align: center; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.9rem;">
+    <p>🛡️ <strong>FraudGuard AI</strong> — Hackathon Prototype Demonstration</p>
+    <p style="margin-top: 8px; font-size: 0.8rem; color: #64748b;">This application is a hackathon prototype and is not connected to live banking networks.</p>
+  </footer>
+
+</body>
+</html>

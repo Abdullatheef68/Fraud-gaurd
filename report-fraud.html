@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Report Fraud — FraudGuard</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body onload="if (!auth.requireAuth()) return;">
+
+  <div class="dashboard-layout">
+    
+    <aside class="sidebar">
+      <div>
+        <div class="sidebar-brand">
+          <span>🛡️</span> FraudGuard
+        </div>
+        
+        <nav class="sidebar-nav">
+          <div class="nav-section-title">Core Engine</div>
+          <a href="dashboard.html" class="nav-item">📊 Overview</a>
+          <a href="transactions.html" class="nav-item">💳 Transactions</a>
+          <a href="alerts.html" class="nav-item">🚨 Alerts</a>
+          <a href="investigations.html" class="nav-item">🔍 Investigations</a>
+
+          <div class="nav-section-title">Intelligence</div>
+          <a href="graph.html" class="nav-item">📈 Graph Analysis</a>
+          <a href="learning.html" class="nav-item">🧠 Adaptive Learning</a>
+          <a href="evidence.html" class="nav-item">📋 Evidence & Audit</a>
+
+          <div class="nav-section-title">Account</div>
+          <a href="profile.html" class="nav-item">👤 Profile</a>
+          <a href="report-fraud.html" class="nav-item active">⚠️ Report Fraud</a>
+          <a href="settings.html" class="nav-item">⚙️ Settings</a>
+        </nav>
+      </div>
+
+      <div class="sidebar-user">
+        <div class="user-info">
+          <div class="user-avatar">DA</div>
+          <div class="user-details">
+            <div class="name">Demo Analyst</div>
+            <div class="role">FRAUD ANALYST</div>
+          </div>
+        </div>
+        <button class="btn btn-sm btn-secondary" onclick="auth.logout()" title="Logout" style="padding: 6px 10px;">🚪</button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      
+      <header class="topbar">
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <button class="mobile-toggle" onclick="toggleSidebar()">☰</button>
+          <div class="topbar-title">
+            <h1>Report Suspicious Fraud Activity</h1>
+          </div>
+        </div>
+        <div class="topbar-actions">
+          <a href="dashboard.html" class="btn btn-sm btn-secondary">📊 Dashboard</a>
+        </div>
+      </header>
+
+      <div class="page-container">
+        
+        <div class="card" style="max-width: 650px;">
+          <div class="card-title" style="margin-bottom: 20px;">
+            ⚠️ Manual Fraud Reporting Form
+          </div>
+
+          <form onsubmit="submitFraudReportForm(event)">
+            <div class="form-group">
+              <label for="rpt-txnid">Transaction ID (Optional)</label>
+              <input type="text" id="rpt-txnid" class="form-control" placeholder="TXN-10023">
+            </div>
+
+            <div class="form-group">
+              <label for="rpt-desc">Fraud Incident Description *</label>
+              <textarea id="rpt-desc" class="form-control" rows="6" placeholder="Provide details regarding unauthorized transfer attempt, phishing link, or suspicious beneficiary..." required></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block" style="padding: 12px; font-size: 1rem;">
+              SUBMIT FRAUD REPORT
+            </button>
+          </form>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/utils.js"></script>
+  <script>
+    async function submitFraudReportForm(e) {
+      e.preventDefault();
+      const user = auth.getUser();
+      const txnId = document.getElementById('rpt-txnid').value;
+      const description = document.getElementById('rpt-desc').value;
+
+      const res = await api.saveFraudReport({
+        userId: user ? user.email : 'demo@fraudguard.ai',
+        transactionId: txnId || null,
+        description: description
+      });
+
+      if (res && res.success) {
+        showToast('Fraud report submitted successfully.', 'success');
+        setTimeout(() => window.location.href = 'dashboard.html', 1200);
+      }
+    }
+  </script>
+</body>
+</html>

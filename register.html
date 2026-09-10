@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register — FraudGuard</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    body {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .auth-container {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 40px;
+      max-width: 500px;
+      width: 100%;
+      box-shadow: var(--shadow-lg);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="auth-container">
+    <div style="text-align: center; margin-bottom: 24px;">
+      <div style="font-size: 1.8rem; font-weight: 800; color: var(--text-main);">🛡️ FraudGuard</div>
+      <p style="color: var(--text-muted); font-size: 0.95rem;">Create an analyst account</p>
+    </div>
+
+    <form onsubmit="handleRegisterSubmit(event)">
+      <div class="form-group">
+        <label for="reg-fullname">Full Name *</label>
+        <input type="text" id="reg-fullname" class="form-control" placeholder="Alex Morgan" required>
+      </div>
+
+      <div class="form-group">
+        <label for="reg-email">Email Address *</label>
+        <input type="email" id="reg-email" class="form-control" placeholder="alex@cybersecurity.io" required>
+      </div>
+
+      <div class="form-group">
+        <label for="reg-org">Organization</label>
+        <input type="text" id="reg-org" class="form-control" placeholder="Acme Financial Tech">
+      </div>
+
+      <div class="form-group">
+        <label for="reg-role">Role *</label>
+        <select id="reg-role" class="form-control" required>
+          <option value="FRAUD ANALYST" selected>FRAUD ANALYST</option>
+          <option value="ADMIN">ADMINISTRATOR</option>
+          <option value="USER">USER</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="reg-password">Password *</label>
+        <input type="password" id="reg-password" class="form-control" placeholder="At least 6 characters" required minlength="6">
+      </div>
+
+      <div class="form-group">
+        <label for="reg-confirm">Confirm Password *</label>
+        <input type="password" id="reg-confirm" class="form-control" placeholder="Re-enter password" required>
+      </div>
+
+      <button type="submit" id="btn-register" class="btn btn-primary btn-block" style="padding: 12px; font-size: 1rem; margin-top: 10px;">
+        CREATE ACCOUNT
+      </button>
+    </form>
+
+    <div style="text-align: center; margin-top: 20px; color: var(--text-muted); font-size: 0.9rem;">
+      Already have an account? <a href="login.html" style="font-weight: 600;">Sign in here</a>
+    </div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/utils.js"></script>
+  <script>
+    async function handleRegisterSubmit(e) {
+      e.preventDefault();
+      const fullName = document.getElementById('reg-fullname').value;
+      const email = document.getElementById('reg-email').value;
+      const organization = document.getElementById('reg-org').value;
+      const role = document.getElementById('reg-role').value;
+      const password = document.getElementById('reg-password').value;
+      const confirm = document.getElementById('reg-confirm').value;
+
+      if (password !== confirm) {
+        showToast('Passwords do not match.', 'danger');
+        return;
+      }
+
+      const btn = document.getElementById('btn-register');
+      btn.disabled = true;
+      btn.textContent = 'Registering...';
+
+      const res = await auth.register({ fullName, email, organization, role, password });
+
+      if (res.success) {
+        showToast('Account created! Redirecting to login...', 'success');
+        setTimeout(() => window.location.href = 'login.html', 1000);
+      } else {
+        btn.disabled = false;
+        btn.textContent = 'CREATE ACCOUNT';
+        showToast(res.error || 'Registration failed', 'danger');
+      }
+    }
+  </script>
+</body>
+</html>

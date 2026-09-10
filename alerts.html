@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alerts — FraudGuard</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body onload="initAlerts()">
+
+  <div class="dashboard-layout">
+    
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div>
+        <div class="sidebar-brand">
+          <span>🛡️</span> FraudGuard
+        </div>
+        
+        <nav class="sidebar-nav">
+          <div class="nav-section-title">Core Engine</div>
+          <a href="dashboard.html" class="nav-item">📊 Overview</a>
+          <a href="transactions.html" class="nav-item">💳 Transactions</a>
+          <a href="alerts.html" class="nav-item active">🚨 Alerts</a>
+          <a href="investigations.html" class="nav-item">🔍 Investigations</a>
+
+          <div class="nav-section-title">Intelligence</div>
+          <a href="graph.html" class="nav-item">📈 Graph Analysis</a>
+          <a href="learning.html" class="nav-item">🧠 Adaptive Learning</a>
+          <a href="evidence.html" class="nav-item">📋 Evidence & Audit</a>
+
+          <div class="nav-section-title">Account</div>
+          <a href="profile.html" class="nav-item">👤 Profile</a>
+          <a href="report-fraud.html" class="nav-item">⚠️ Report Fraud</a>
+          <a href="settings.html" class="nav-item">⚙️ Settings</a>
+        </nav>
+      </div>
+
+      <div class="sidebar-user">
+        <div class="user-info">
+          <div class="user-avatar">DA</div>
+          <div class="user-details">
+            <div class="name">Demo Analyst</div>
+            <div class="role">FRAUD ANALYST</div>
+          </div>
+        </div>
+        <button class="btn btn-sm btn-secondary" onclick="auth.logout()" title="Logout" style="padding: 6px 10px;">🚪</button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      
+      <header class="topbar">
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <button class="mobile-toggle" onclick="toggleSidebar()">☰</button>
+          <div class="topbar-title">
+            <h1>Fraud Alerts & Threat Management</h1>
+          </div>
+        </div>
+        <div class="topbar-actions">
+          <a href="dashboard.html" class="btn btn-sm btn-secondary">📊 Dashboard</a>
+        </div>
+      </header>
+
+      <div class="page-container">
+        
+        <!-- Alert Severity Counter Cards -->
+        <div class="stat-grid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));">
+          <div class="stat-card" style="border-left: 4px solid var(--danger);">
+            <div class="stat-content">
+              <div class="label">Critical Severity</div>
+              <div class="value" id="count-critical" style="color: var(--danger);">0</div>
+            </div>
+          </div>
+
+          <div class="stat-card" style="border-left: 4px solid var(--warning);">
+            <div class="stat-content">
+              <div class="label">High Severity</div>
+              <div class="value" id="count-high" style="color: var(--warning);">0</div>
+            </div>
+          </div>
+
+          <div class="stat-card" style="border-left: 4px solid var(--info);">
+            <div class="stat-content">
+              <div class="label">Medium Severity</div>
+              <div class="value" id="count-medium" style="color: var(--info);">0</div>
+            </div>
+          </div>
+
+          <div class="stat-card" style="border-left: 4px solid var(--success);">
+            <div class="stat-content">
+              <div class="label">Resolved</div>
+              <div class="value" id="count-resolved" style="color: var(--success);">0</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Alert Cards Container -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Real-Time Alert Queue</div>
+            <button class="btn btn-sm btn-secondary" onclick="initAlerts()">🔄 Refresh</button>
+          </div>
+
+          <div id="alerts-container">
+            <div style="text-align: center; color: var(--text-muted); padding: 40px;">Loading alert stream...</div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/alerts.js"></script>
+</body>
+</html>

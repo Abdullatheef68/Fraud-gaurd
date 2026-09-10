@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Overview Dashboard — FraudGuard</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body onload="initDashboard()">
+
+  <div class="dashboard-layout">
+    
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div>
+        <div class="sidebar-brand">
+          <span>🛡️</span> FraudGuard
+        </div>
+        
+        <nav class="sidebar-nav">
+          <div class="nav-section-title">Core Engine</div>
+          <a href="dashboard.html" class="nav-item active">📊 Overview</a>
+          <a href="transactions.html" class="nav-item">💳 Transactions</a>
+          <a href="alerts.html" class="nav-item">🚨 Alerts</a>
+          <a href="investigations.html" class="nav-item">🔍 Investigations</a>
+
+          <div class="nav-section-title">Intelligence</div>
+          <a href="graph.html" class="nav-item">📈 Graph Analysis</a>
+          <a href="learning.html" class="nav-item">🧠 Adaptive Learning</a>
+          <a href="evidence.html" class="nav-item">📋 Evidence & Audit</a>
+
+          <div class="nav-section-title">Account</div>
+          <a href="profile.html" class="nav-item">👤 Profile</a>
+          <a href="report-fraud.html" class="nav-item">⚠️ Report Fraud</a>
+          <a href="settings.html" class="nav-item">⚙️ Settings</a>
+        </nav>
+      </div>
+
+      <div class="sidebar-user">
+        <div class="user-info">
+          <div class="user-avatar">DA</div>
+          <div class="user-details">
+            <div class="name">Demo Analyst</div>
+            <div class="role">FRAUD ANALYST</div>
+          </div>
+        </div>
+        <button class="btn btn-sm btn-secondary" onclick="auth.logout()" title="Logout" style="padding: 6px 10px;">🚪</button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      
+      <!-- Topbar -->
+      <header class="topbar">
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <button class="mobile-toggle" onclick="toggleSidebar()">☰</button>
+          <div class="topbar-title">
+            <h1>Platform Overview</h1>
+          </div>
+        </div>
+        <div class="topbar-actions">
+          <a href="settings.html" class="btn btn-sm btn-secondary">⚙️ Config</a>
+        </div>
+      </header>
+
+      <!-- Page Container -->
+      <div class="page-container">
+        
+        <!-- Interactive Transaction Simulation Bar -->
+        <div class="sim-bar">
+          <div class="sim-bar-title">
+            ⚡ Quick Hackathon Simulator
+            <span style="font-size: 0.8rem; font-weight: normal; opacity: 0.8;">(Click a transaction scenario to test real-time risk engine scoring)</span>
+          </div>
+          <div class="sim-buttons">
+            <button class="btn-sim" onclick="triggerSimulation('NORMAL')">
+              <div class="title">✅ Normal Txn</div>
+              <div class="desc">₹850 • Trusted Device • Baseline Location → Risk: ~12 (ALLOW)</div>
+            </button>
+
+            <button class="btn-sim" onclick="triggerSimulation('SUSPICIOUS')">
+              <div class="title">⚠️ Suspicious Txn</div>
+              <div class="desc">₹18,200 • New Device • Geolocation Shift → Risk: ~64 (VERIFY)</div>
+            </button>
+
+            <button class="btn-sim" onclick="triggerSimulation('HIGH_RISK_FRAUD')">
+              <div class="title">🚨 High-Risk Fraud</div>
+              <div class="desc">₹48,500 • Velocity Anomaly • Proxy IP → Risk: ~94 (BLOCK)</div>
+            </button>
+
+            <button class="btn-sim" onclick="triggerSimulation('MONEY_MULE')">
+              <div class="title">🕸️ Money Mule Ring</div>
+              <div class="desc">₹1,54,000 • Rapid Multi-Hop Transfer → Risk: ~97 (BLOCK)</div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Stat Counter Grid -->
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div class="stat-icon blue">💳</div>
+            <div class="stat-content">
+              <div class="label">Transactions Today</div>
+              <div class="value" id="stat-today">0</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon amber">⚠️</div>
+            <div class="stat-content">
+              <div class="label">Suspicious Txns</div>
+              <div class="value" id="stat-suspicious" style="color: var(--warning);">0</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon red">🚨</div>
+            <div class="stat-content">
+              <div class="label">High Risk Flagged</div>
+              <div class="value" id="stat-highrisk" style="color: var(--danger);">0</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon green">🛡️</div>
+            <div class="stat-content">
+              <div class="label">Fraud Blocked</div>
+              <div class="value" id="stat-blocked" style="color: var(--success);">0</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Main Dashboard Split Layout -->
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px;">
+          
+          <!-- Left Column: Live Transaction Feed -->
+          <div>
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">💳 Live Transaction Stream</div>
+                <a href="transactions.html" class="btn btn-sm btn-secondary">View All</a>
+              </div>
+
+              <div class="table-container">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Txn ID</th>
+                      <th>Amount</th>
+                      <th>Beneficiary</th>
+                      <th>Risk Score</th>
+                      <th>Decision</th>
+                      <th>Time</th>
+                    </tr>
+                  </thead>
+                  <tbody id="recent-txns-body">
+                    <!-- Populated dynamically -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Model Status & Quick Alerts -->
+          <div>
+            <!-- Model Status Card -->
+            <div class="card" style="border-left: 4px solid var(--success);">
+              <div class="card-title" style="display: flex; align-items: center; justify-content: space-between;">
+                <span>🤖 Engine Status</span>
+                <span class="badge badge-success">ACTIVE</span>
+              </div>
+              <div style="margin-top: 12px; font-size: 0.9rem; color: var(--text-muted);">
+                <strong>Version:</strong> FraudGuard Risk Engine v1.0<br>
+                <strong>Evaluation Mode:</strong> Deterministic Feature Scoring<br>
+                <strong>Integrity Layer:</strong> SHA-256 Enabled
+              </div>
+            </div>
+
+            <!-- Recent Alerts Widget -->
+            <div class="card">
+              <div class="card-header" style="margin-bottom: 12px;">
+                <div class="card-title">🚨 Recent Alerts</div>
+                <a href="alerts.html" class="btn btn-sm btn-secondary">View Queue</a>
+              </div>
+              <div id="recent-alerts-list">
+                <!-- Dynamic alerts -->
+              </div>
+            </div>
+
+            <!-- Active Investigations Widget -->
+            <div class="card">
+              <div class="card-header" style="margin-bottom: 12px;">
+                <div class="card-title">🔍 Active Cases</div>
+                <a href="investigations.html" class="btn btn-sm btn-secondary">Manage</a>
+              </div>
+              <div id="recent-cases-list">
+                <!-- Dynamic cases -->
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/transactions.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>
